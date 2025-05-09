@@ -75,7 +75,7 @@ const LoginForm = () => {
             type={showPassword ? "text" : "password"}
             onChange={formik.handleChange}
             value={formik.values.password}
-            placeholder="Enter your Password"
+            placeholder="Password"
           />
           <button
             type="button"
