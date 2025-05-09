@@ -4,7 +4,7 @@ import axios from 'axios';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const response = await axios.post('http://localhost:9000/register', body);
+    const response = await axios.post('http://localhost:8000/register', body);
 
     return NextResponse.json(response.data, { status: 201 });
   } catch (error: unknown) {

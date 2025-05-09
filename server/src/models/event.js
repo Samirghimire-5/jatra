@@ -19,7 +19,7 @@ const eventSchema = new mongoose.Schema({
     required: true 
   },
   booked_by: { 
-    ref: "User", 
+    ref: "User",
     type: mongoose.Schema.Types.ObjectId,
     required: true
   },

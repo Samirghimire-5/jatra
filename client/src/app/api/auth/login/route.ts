@@ -1,28 +1,41 @@
-import { NextResponse } from 'next/server';
-import axios from 'axios';
-
-
+import { NextResponse } from "next/server";
+import axios from "axios";
+import { cookies } from "next/headers";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const response = await fetch('http://localhost:9000/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      return NextResponse.json(errorData, { status: response.status });
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_URL}/login`,
+      body
+    );
+    const data = response.data;
+
+    if (response.status !== 200) {
+      return NextResponse.json(
+        { message: data.message || "Login failed" },
+        { status: response.status }
+      );
     }
 
-    const data = await response.json();
-    return NextResponse.json(data, { status: 200 });
-  } catch (error) {
-    console.error('Login error:', error);
-    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+    const cookieStore = await cookies();
+    cookieStore.set("token", data.token, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: "/",
+    });
+
+    return NextResponse.json(
+      { message: "Login successful", data: data?.data },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    console.error("Login error:", error?.response?.data || error.message);
+    return NextResponse.json(
+      { message: error?.response?.data?.message || "Internal server error" },
+      { status: error?.response?.status || 500 }
+    );
   }
 }

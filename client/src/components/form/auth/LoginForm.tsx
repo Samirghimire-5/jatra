@@ -27,13 +27,14 @@ const LoginForm = () => {
   const handleLogin = async (values: any) => {
     try {
       const res = await axios.post("/api/auth/login", values);
+
       if (res.status == 200 || res.status == 201) {
-        toast.success(res.data.msg);
-        dispatch(addUserDetails(res.data));
+        toast.success(res.data.message);
+        dispatch(addUserDetails(res.data?.data));
         router.push("/home");
       }
     } catch (err: any) {
-      toast.error(err.response?.data?.msg);
+      toast.error(err.response?.data?.message);
     }
   };
   const [isForgetPasswordModelOpen, setIsForgetPasswordModelOpen] =
@@ -65,7 +66,7 @@ const LoginForm = () => {
             <p className="text-red-500 text-sm">{formik.errors.email}</p>
           )}
         </div>
-        
+
         <div className="grid gap-2 relative">
           <Label htmlFor="password">Password</Label>
           <Input
