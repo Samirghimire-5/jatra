@@ -25,7 +25,7 @@ const RegisterForm = () => {
     try {
       const res = await axios.post("/api/auth/register", values);
       if (res.status == 200 || res.status == 201) {
-        console.log(res);
+        console.log("res", res);
         toast.success(res.data.msg);
         router.push("/login");
       }
@@ -103,7 +103,7 @@ const RegisterForm = () => {
             type={showPassword ? "text" : "password"}
             onChange={formik.handleChange}
             value={formik.values.password}
-            placeholder="Enter your Password"
+            placeholder="Password"
           />
           <button
             type="button"
