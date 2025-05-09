@@ -226,7 +226,7 @@ export default function CustomMap({
             </Button>{" "}
           </div>
         ) : (
-          userDetails?.data?.role == "admin" && (
+          userDetails?.role == "admin" && (
             <Button
               className="bg-orange-400 rounded mx-2"
               onClick={() => setIsPickStart(true)}

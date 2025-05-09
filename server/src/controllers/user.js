@@ -2,8 +2,6 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-
-
 const getUser = async (req, res) => {
   const data = await User.find().select("fullName");
   res.json(data);
@@ -28,7 +26,7 @@ const loginUser = async (req, res) => {
 
   const isMatched = await bcrypt.compare(req.body.password, user.password);
   if (!isMatched) return res.status(400).json({ msg: "Invalid password" });
-  
+
   const token = await jwt.sign(
     {
       data: req.body.email,
@@ -36,7 +34,7 @@ const loginUser = async (req, res) => {
     process.env.SECRET_KEY,
     { expiresIn: "1h" }
   );
-  res.json({
+  res.status(200).json({
     data: user,
     token,
     isLoggedIn: true,

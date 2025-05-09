@@ -13,7 +13,7 @@ const Avatar = () => {
     const handleLogout = async () => {
         await axios.post("/api/auth/logout", {})
         dispatch(logout())
-        router.push('/')
+        router.push('/login')
     }
     return (
         <DropdownMenu>

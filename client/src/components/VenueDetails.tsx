@@ -17,7 +17,7 @@ import toast from "react-hot-toast";
 import { io } from 'socket.io-client';
 import { setNotification, setNotificationList } from "@/lib/redux/features/notification/notificationSlice";
 
-const socket = io('http://localhost:9000');
+const socket = io('http://localhost:8000');
 
 export default function VenueBookingSheet({ venueDetails, venueBookings ,selectedVenueId}) {
   const dispatch = useDispatch();
@@ -74,12 +74,12 @@ export default function VenueBookingSheet({ venueDetails, venueBookings ,selecte
       "event": eventId,
       "venue": selectedVenueId,
       "booked_date": date,
-      "userId": userDetails?.data._id
+      "userId": userDetails._id
     });
   };
 
   const fetchUserEvents = async() => {
-   const {data} =await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/events/${userDetails?.data._id}`)
+   const {data} =await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/events/${userDetails._id}`)
    setEvents(data)
   }
   useEffect(()=>{

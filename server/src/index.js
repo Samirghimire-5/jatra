@@ -1,64 +1,51 @@
-const express = require('express')
-const { Server } = require('socket.io');
-require('dotenv').config()
-const port = process.env.PORT
-const UserRoute = require('./routes/user')
-const { createServer } = require('http');
-const VenueRoute = require('./routes/venue')
-const BookingRoute = require('./routes/booking')
-const EventRoute = require('./routes/event')
-const dbConnect = require('./db/connection')
-const cors = require('cors');
-const Booking = require('./models/booking');
-const User = require('./models/user');
-const notificationRoute = require('./routes/notification')
-const app = express()
+const express = require("express");
+const { Server } = require("socket.io");
+require("dotenv").config();
+const port = process.env.PORT;
+const UserRoute = require("./routes/user");
+const { createServer } = require("http");
+const VenueRoute = require("./routes/venue");
+const BookingRoute = require("./routes/booking");
+const EventRoute = require("./routes/event");
+const dbConnect = require("./db/connection");
+const cors = require("cors");
+const Booking = require("./models/booking");
+const User = require("./models/user");
+const notificationRoute = require("./routes/notification");
+const app = express();
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
     origin: "http://localhost:3000",
-
-  }
+    credentials: true,
+  },
 });
-app.use(express.json())
-app.use(cors())
-dbConnect()
+app.use(express.json());
+app.use(cors());
+dbConnect();
 
-app.use(UserRoute)
-app.use(VenueRoute)
-app.use(EventRoute)
-app.use(BookingRoute)
-app.use(notificationRoute)
+app.use(UserRoute);
+app.use(VenueRoute);
+app.use(EventRoute);
+app.use(BookingRoute);
+app.use(notificationRoute);
 
-
-
-io.on('connection', (socket) => {
-
-  socket.on('message', (message) => {
-    io.emit('message', message);
+io.on("connection", (socket) => {
+  socket.on("message", (message) => {
+    io.emit("message", message);
   });
 
-  socket.on('eventRequest',async(eventRequest) => {
-    const {venue,event, booked_date} =eventRequest
-    await Booking.create({venue,event, booked_date})
-    const allrequest =await Booking.find().populate('event venue')
-    io.emit('eventRequest', allrequest);
+  socket.on("eventRequest", async (eventRequest) => {
+    const { venue, event, booked_date } = eventRequest;
+    await Booking.create({ venue, event, booked_date });
+    const allrequest = await Booking.find().populate("event venue");
+    io.emit("eventRequest", allrequest);
   });
-
-  
-
-
 });
 
 server.listen(port, () => {
   console.log(`Socket.IO server listening on port ${port}`);
 });
-
-
-
-
-
-
 
 // REST API vs GRAPHQL
 
@@ -66,11 +53,7 @@ server.listen(port, () => {
 // -> /users /users/:id /users/:id/friends /posts ------> /graphql
 // -> GET POST PATCH PUT DELETE ------> POST
 // -> CRUD, Query and mutation
-// -> 
-
-
-
-
+// ->
 
 // const express = require('express');
 // const { createHandler } = require('graphql-http/lib/use/express');
@@ -86,8 +69,6 @@ server.listen(port, () => {
 // });
 // // Construct a schema, using GraphQL schema language
 
-
-
 // const {
 //   GraphQLObjectType,
 //   GraphQLNonNull,
@@ -99,11 +80,11 @@ server.listen(port, () => {
 //   GraphQLID
 // } = require('graphql');
 // const User = require('./models/user');
- 
+
 // const UserType = new GraphQLObjectType({
 //   name: 'User',
 //   fields: () => ({
-//     id: { type: GraphQLID }, 
+//     id: { type: GraphQLID },
 //     fullName: { type: new GraphQLNonNull(GraphQLString) },
 //     address: { type: GraphQLString },
 //     email: { type: new GraphQLNonNull(GraphQLString) },
@@ -115,9 +96,6 @@ server.listen(port, () => {
 //   }),
 // });
 
-
-
- 
 // const RootQuery = new GraphQLObjectType({
 //   name: 'Query',
 //   fields: {
@@ -165,7 +143,6 @@ server.listen(port, () => {
 //     },
 //   },
 // });
- 
 
 // const RootMutation = new GraphQLObjectType({
 //   name: 'mutation',
@@ -214,8 +191,6 @@ server.listen(port, () => {
 //     },
 //   },
 // });
- 
-
 
 // app.all(
 //   '/graphql',
@@ -224,9 +199,8 @@ server.listen(port, () => {
 //       query: RootQuery,
 //       mutation: RootMutation
 //     }),
-    
+
 //   }),
 // );
 // app.listen(4000);
 // console.log('Running a GraphQL API server at localhost:4000/graphql');
-
